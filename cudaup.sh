@@ -145,8 +145,8 @@ then
 	fi
 	if [ $OS = 'win32' ] || [ $OS = 'win64' ]
 	then
-		cp $HOME/cudatext_up/src/CudaText/app/cudatext.exe $HOME/cudatext_up/bin/cudatext.exe
+		cp $HOME/cudatext_up/src/CudaText/app/cudatext.exe $HOME/cudatext_up/bin/$OS-$CPU/cudatext.exe
 	else
-		cp $HOME/cudatext_up/src/CudaText/app/cudatext $HOME/cudatext_up/bin/cudatext
+		cp $HOME/cudatext_up/src/CudaText/app/cudatext $HOME/cudatext_up/bin/$OS-$CPU/cudatext
 	fi
 fi
