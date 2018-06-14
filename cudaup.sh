@@ -2,9 +2,17 @@
 DoGet='false'
 DoMake='false'
 ShowHelp='false'
+NextParLazdir='false'
+lazdir='/usr/lib/lazarus'
 for i in $*
 do
-case "$i" in
+	if [ $NextParLazdir = 'true' ]
+	then
+		$NextParLazdir = 'false'
+		lazdir=$i
+		continue
+	fi
+	case "$i" in
 	'--get'|'-g')
 	DoGet='true'
 	;;
@@ -14,6 +22,9 @@ case "$i" in
 	'--help'|'-h')
 	ShowHelp='true'
 	;;
+	'--lazdir'|'-l')
+	NextParLazdir='true'
+	;;
 	*)
 	echo "error: unknown parameter"
 	esac
@@ -22,9 +33,10 @@ if [ $ShowHelp = 'true' ] || (($#==0))
 then
 	echo "usage: $script_name [params]"
 	echo "params list:"
-	echo "-g  --get  download sources"
-	echo "-c  --make meke cuda_text"
-	echo "-h  --help show this message"
+	echo "-g  --get                 download sources"
+	echo "-m  --make                make CudaText"
+	echo "-l  --lazdir <directiory> set lazarus directory"
+	echo "-h  --help                show this message"
 	exit 0
 fi
 Repos=$(cat cudaup.repos)
@@ -65,10 +77,8 @@ then
 	inc=''
 	for i in $Packets
 	do
-		lazbuild "$HOME/cudatext_up/src/$i"
-		lazbuild --add-package "$HOME/cudatext_up/src/$i"
+		"$lazdir/lazbuild" --lazarusdir="$lazdir" "$HOME/cudatext_up/src/$i"
+		"$lazdir/lazbuild" --lazarusdir="$lazdir" --add-package "$HOME/cudatext_up/src/$i"
 	done
-	lazbuild uniqueinstance_package
-	lazbuild --add-package uniqueinstance_package
-	lazbuild "$HOME/cudatext_up/src/CudaText/app/cudatext.lpi"
+	"$lazdir/lazbuild" --lazarusdir="$lazdir" "$HOME/cudatext_up/src/CudaText/app/cudatext.lpi"
 fi
