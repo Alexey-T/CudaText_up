@@ -42,13 +42,13 @@ do
 	'--lazdir'|'-l')
 	NextParLazdir='true'
 	;;
-	'--CPU'|'-C')
+	'--cpu'|'-c')
 	NextParCPU='true'
 	;;
-	'--OS'|'-O')
+	'--os'|'-o')
 	NextParOS='true'
 	;;
-	'--InstPacks'|'-I')
+	'--packs'|'-p')
 	DoInstallLibs='true'
 	;;
 	*)
@@ -65,11 +65,11 @@ then
 	fi
 	echo "params list:"
 	echo "-g  --get                 download sources"
-	echo "-I  --InstPacks           install lazarus packets"
-	echo "-m  --make                make CudaText"
-	echo "-O  --OS <system>         select target os (win32/win64/linux)"
-	echo "-C  --CPU <architecture>  select target architecture (i386/x86_64)"
-	echo "-l  --lazdir <directiory> set lazarus directory"		
+	echo "-p  --packs               install packages to Lazarus"
+	echo "-m  --make                compile CudaText"
+	echo "-o  --os <system>         select target OS (win32/win64/linux)"
+	echo "-c  --cpu <arch>          select target architecture (i386/x86_64)"
+	echo "-l  --lazdir <directiory> set Lazarus directory"
 	echo "-h  --help                show this message"
 	exit
 fi

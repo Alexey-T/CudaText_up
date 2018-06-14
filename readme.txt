@@ -3,14 +3,14 @@ Working dir is ~/cudatext_up
 Build results are in subdir /bin
 
 Download+build for current platform:
-$ ./cudaup.sh -g -I -m
+$ ./cudaup.sh -g -p -m
 Download+build for current platform, with custom path to Lazarus:
-$ ./cudaup.sh -g -I -m -l /path/to/lazarus
+$ ./cudaup.sh -g -p -m -l /path/to/lazarus
 Download+ cross compile to another platform:
-$ ./cudaup.sh -g -I -m -l -O system -C arch
+$ ./cudaup.sh -g -p -m -l /path/to/lazarus -o system -c cpu
   
 Possible values of "system": win32, win64, linux
-Possible values of "arch" (only for system=linux): i386, x86_64
+Possible values of "cpu" (not for win32, win64): i386, x86_64
 
 Author: @Artem3213212
 License: MIT
