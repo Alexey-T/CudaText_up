@@ -57,7 +57,12 @@ do
 done
 if [ $ShowHelp = 'true' ] || (($#==0))
 then
-	echo "usage: $script_name [params]"
+	if [ "$script_name" = '' ]
+	then
+		echo 'usage: ./cudaup.sh [params]'
+	else
+		echo "usage: $script_name [params]"
+	fi
 	echo "params list:"
 	echo "-g  --get                 download sources"
 	echo "-I  --InstPacks           install lazarus packets"
