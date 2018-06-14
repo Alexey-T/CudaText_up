@@ -1,15 +1,32 @@
 #!/bin/bash
+OS="linux"
+CPU="$HOSTTYPE"
 DoGet='false'
+DoInstallLibs='false'
 DoMake='false'
 ShowHelp='false'
 NextParLazdir='false'
+NextParOS='false'
+NextParCPU='false'
 lazdir='/usr/lib/lazarus'
 for i in $*
 do
-	if [ $NextParLazdir = 'true' ]
+	if [ "$NextParLazdir" = 'true' ]
 	then
-		$NextParLazdir = 'false'
+		NextParLazdir='false'
 		lazdir=$i
+		continue
+	fi
+	if [ "$NextParOS" = 'true' ]
+	then
+		NextParOS='false'
+		OS=$i
+		continue
+	fi
+	if [ "$NextParCPU" = 'true' ]
+	then
+		NextParCPU='false'
+		CPU=$i
 		continue
 	fi
 	case "$i" in
@@ -24,6 +41,15 @@ do
 	;;
 	'--lazdir'|'-l')
 	NextParLazdir='true'
+	;;
+	'--CPU'|'-C')
+	NextParCPU='true'
+	;;
+	'--OS'|'-O')
+	NextParOS='true'
+	;;
+	'--InstLib'|'-I')
+	DoInstallLibs='true'
 	;;
 	*)
 	echo "error: unknown parameter"
@@ -72,14 +98,43 @@ then
 	done
 	cd ../
 fi
-if [ $DoMake = 'true' ]
+if [ $DoInstallLibs = 'true' ]
 then
-	inc=''
 	for i in $Packets
 	do
 		"$lazdir/lazbuild" -q --lazarusdir="$lazdir" "$HOME/cudatext_up/src/$i"
 		"$lazdir/lazbuild" -q --lazarusdir="$lazdir" --add-package "$HOME/cudatext_up/src/$i"
 	done
 	"$lazdir/lazbuild" -q --build-ide=
-	"$lazdir/lazbuild" -q --lazarusdir="$lazdir" "$HOME/cudatext_up/src/CudaText/app/cudatext.lpi"
+fi
+if [ $DoMake = 'true' ]
+then
+	inc=''
+	if [ $OS != 'linux' ]
+	then
+		inc="$inc --os=$OS"
+	fi
+	if [ $OS = 'win32' ]
+	then
+		CPU='i386'
+	fi
+	if [ $OS = 'win64' ]
+	then
+		CPU='x86_64'
+	fi
+	if [ $CPU != "$HOSTTYPE" ]
+	then
+		inc="$inc --cpu=$CPU"
+	fi
+	"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "$HOME/cudatext_up/src/CudaText/app/cudatext.lpi"
+	if ! [ -d "$HOME/cudatext_up/bin" ]
+	then
+		mkdir "$HOME/cudatext_up/bin"
+	fi
+	if [ $OS = 'win32' ] || [ $OS = 'win64' ]
+	then
+		cp $HOME/cudatext_up/src/CudaText/app/cudatext.exe $HOME/cudatext_up/bin/$OS-$CPU-cudatext.exe
+	else
+		cp $HOME/cudatext_up/src/CudaText/app/cudatext $HOME/cudatext_up/bin/$OS-$CPU-cudatext
+	fi
 fi
