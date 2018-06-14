@@ -67,9 +67,9 @@ then
 	echo "-g  --get                 download sources"
 	echo "-p  --packs               install packages to Lazarus"
 	echo "-m  --make                compile CudaText"
-	echo "-o  --os <system>         select target OS (win32/win64/linux)"
-	echo "-c  --cpu <arch>          select target architecture (i386/x86_64)"
 	echo "-l  --lazdir <directiory> set Lazarus directory"
+	echo "-o  --os <system>         set target OS (win32/win64/linux/freebsd/darwin)"
+	echo "-c  --cpu <arch>          set target CPU (i386/x86_64/arm)"
 	echo "-h  --help                show this message"
 	exit
 fi
