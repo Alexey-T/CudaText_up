@@ -77,8 +77,9 @@ then
 	inc=''
 	for i in $Packets
 	do
-		"$lazdir/lazbuild" --lazarusdir="$lazdir" "$HOME/cudatext_up/src/$i"
-		"$lazdir/lazbuild" --lazarusdir="$lazdir" --add-package "$HOME/cudatext_up/src/$i"
+		"$lazdir/lazbuild" -q --lazarusdir="$lazdir" "$HOME/cudatext_up/src/$i"
+		"$lazdir/lazbuild" -q --lazarusdir="$lazdir" --add-package "$HOME/cudatext_up/src/$i"
 	done
-	"$lazdir/lazbuild" --lazarusdir="$lazdir" "$HOME/cudatext_up/src/CudaText/app/cudatext.lpi"
+	"$lazdir/lazbuild" -q --build-ide=
+	"$lazdir/lazbuild" -q --lazarusdir="$lazdir" "$HOME/cudatext_up/src/CudaText/app/cudatext.lpi"
 fi
