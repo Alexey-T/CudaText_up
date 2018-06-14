@@ -48,7 +48,7 @@ do
 	'--OS'|'-O')
 	NextParOS='true'
 	;;
-	'--InstLib'|'-I')
+	'--InstPacks'|'-I')
 	DoInstallLibs='true'
 	;;
 	*)
@@ -60,10 +60,13 @@ then
 	echo "usage: $script_name [params]"
 	echo "params list:"
 	echo "-g  --get                 download sources"
+	echo "-I  --InstPacks           install lazarus packets"
 	echo "-m  --make                make CudaText"
-	echo "-l  --lazdir <directiory> set lazarus directory"
+	echo "-O  --OS <system>         select target os (win32/win64/linux)"
+	echo "-C  --CPU <architecture>  select target architecture (i386/x86_64)"
+	echo "-l  --lazdir <directiory> set lazarus directory"		
 	echo "-h  --help                show this message"
-	exit 0
+	exit
 fi
 Repos=$(cat cudaup.repos)
 Packets=$(cat cudaup.packets)
@@ -131,10 +134,14 @@ then
 	then
 		mkdir "$HOME/cudatext_up/bin"
 	fi
+	if ! [ -d "$HOME/cudatext_up/bin/$OS-$CPU" ]
+	then
+		mkdir "$HOME/cudatext_up/bin/$OS-$CPU"
+	fi
 	if [ $OS = 'win32' ] || [ $OS = 'win64' ]
 	then
-		cp $HOME/cudatext_up/src/CudaText/app/cudatext.exe $HOME/cudatext_up/bin/$OS-$CPU-cudatext.exe
+		cp $HOME/cudatext_up/src/CudaText/app/cudatext.exe $HOME/cudatext_up/bin/cudatext.exe
 	else
-		cp $HOME/cudatext_up/src/CudaText/app/cudatext $HOME/cudatext_up/bin/$OS-$CPU-cudatext
+		cp $HOME/cudatext_up/src/CudaText/app/cudatext $HOME/cudatext_up/bin/cudatext
 	fi
 fi
