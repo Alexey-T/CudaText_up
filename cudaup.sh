@@ -1,108 +1,91 @@
 #!/bin/bash
+
+#set -e
 OS="linux"
 CPU="$HOSTTYPE"
 DoGet='false'
 DoInstallLibs='false'
 DoMake='false'
-ShowHelp='false'
-NextParLazdir='false'
-NextParOS='false'
-NextParCPU='false'
-lazdir='/usr/lib/lazarus'
-for i in $*
-do
-	if [ "$NextParLazdir" = 'true' ]
-	then
-		NextParLazdir='false'
-		lazdir=$i
-		continue
-	fi
-	if [ "$NextParOS" = 'true' ]
-	then
-		NextParOS='false'
-		OS=$i
-		continue
-	fi
-	if [ "$NextParCPU" = 'true' ]
-	then
-		NextParCPU='false'
-		CPU=$i
-		continue
-	fi
-	case "$i" in
-	'--get'|'-g')
-	DoGet='true'
-	;;
-	'--make'|'-m')    
-        DoMake='true'
-        ;;
-	'--help'|'-h')
-	ShowHelp='true'
-	;;
-	'--lazdir'|'-l')
-	NextParLazdir='true'
-	;;
-	'--cpu'|'-c')
-	NextParCPU='true'
-	;;
-	'--os'|'-o')
-	NextParOS='true'
-	;;
-	'--packs'|'-p')
-	DoInstallLibs='true'
-	;;
-	*)
-	echo "error: unknown parameter"
+lazdir=$(dirname "$(readlink -f "$(which lazbuild)")")
+usage="
+Usage: $(basename $0) [OPTION...]
+
+Options:
+  -g  --get                  download sources
+  -p  --packs                install packages to Lazarus
+  -m  --make                 compile CudaText
+  -l  --lazdir <directiory>  set Lazarus directory
+  -o  --os <system>          set target OS (win32/win64/linux/freebsd/darwin)
+  -c  --cpu <arch>           set target CPU (i386/x86_64/arm)
+  -h  --help                 show this message
+"
+
+OPTIONS=gpml:o:c:
+LONGOPTS=get,packs,make,lazdir:,os:,cpu:
+! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
+if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
+	echo "$usage"  
+	exit 2
+fi
+eval set -- "$PARSED"
+
+while true; do
+	case "$1" in
+	-g|--get)
+		DoGet=true
+		shift
+		;;
+	-m|--make)
+		DoMake=true
+		shift
+		;;
+	-h|--help)
+		echo "$usage"
+		exit 0
+		;;
+	-l|--lazdir)
+		lazdir="$2"
+		shift 2
+		;;
+	-c|--cpu)
+		CPU=$@
+		shift 2
+		;;
+	-o|--os)
+		OS=$2
+		shift 2
+		;;
+	-p|--packs)
+		DoInstallLibs=true
+		shift
+		;;
+	--)
+		shift
+		break
+		;;
 	esac
 done
-if [ $ShowHelp = 'true' ] || (($#==0))
-then
-	if [ "$script_name" = '' ]
-	then
-		echo 'usage: ./cudaup.sh [params]'
-	else
-		echo "usage: $script_name [params]"
-	fi
-	echo "params list:"
-	echo "-g  --get                 download sources"
-	echo "-p  --packs               install packages to Lazarus"
-	echo "-m  --make                compile CudaText"
-	echo "-l  --lazdir <directiory> set Lazarus directory"
-	echo "-o  --os <system>         set target OS (win32/win64/linux/freebsd/darwin)"
-	echo "-c  --cpu <arch>          set target CPU (i386/x86_64/arm)"
-	echo "-h  --help                show this message"
-	exit
+
+if [[ ! -x $lazdir/lazbuild ]]; then
+	echo "Couldn't find lazbuild"
+	echo "Use -l <path> option"
+	exit 1
 fi
+
+cd $(dirname "$0")
 Repos=$(cat cudaup.repos)
 Packets=$(cat cudaup.packets)
-if ! [ -d "$HOME/cudatext_up/" ]
-then
-	mkdir "$HOME/cudatext_up/"
-fi
-cd "$HOME/cudatext_up/"
 if [ $DoGet = 'true' ]
 then
-	if ! [ -d 'src' ]
-	then
-		mkdir 'src'
-	fi
+	mkdir -pv 'src'
 	cd src
 	for i in $Repos
 	do	
 		temp=${i/'https://github.com/Alexey-T/'/''}
-		fl=${temp/'.git'/''}
-		if ! [ -d "$fl" ]
-		then
-			mkdir "$fl"
-		fi
-		if ! [ -d "$fl/.git" ]
-		then
-			git clone "$i"	
-		else
-			cd "$fl"
-			git pull origin master
-			cd ../
-		fi
+		[ ! -d "$temp/.git" ] && git clone "$i"	
+		cd "$temp"
+		git pull origin master
+		cd ../
 	done
 	cd ../
 fi
@@ -110,8 +93,8 @@ if [ $DoInstallLibs = 'true' ]
 then
 	for i in $Packets
 	do
-		"$lazdir/lazbuild" -q --lazarusdir="$lazdir" "$HOME/cudatext_up/src/$i"
-		"$lazdir/lazbuild" -q --lazarusdir="$lazdir" --add-package "$HOME/cudatext_up/src/$i"
+		"$lazdir/lazbuild" -q --lazarusdir="$lazdir" "./src/$i"
+		"$lazdir/lazbuild" -q --lazarusdir="$lazdir" --add-package "./src/$i"
 	done
 	"$lazdir/lazbuild" -q --build-ide=
 fi
@@ -134,19 +117,19 @@ then
 	then
 		inc="$inc --cpu=$CPU"
 	fi
-	"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "$HOME/cudatext_up/src/CudaText/app/cudatext.lpi"
-	if ! [ -d "$HOME/cudatext_up/bin" ]
+	"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "./src/CudaText/app/cudatext.lpi"
+	if ! [ -d "./bin" ]
 	then
-		mkdir "$HOME/cudatext_up/bin"
+		mkdir "./bin"
 	fi
-	if ! [ -d "$HOME/cudatext_up/bin/$OS-$CPU" ]
+	if ! [ -d "$./bin/$OS-$CPU" ]
 	then
-		mkdir "$HOME/cudatext_up/bin/$OS-$CPU"
+		mkdir "./bin/$OS-$CPU"
 	fi
 	if [ $OS = 'win32' ] || [ $OS = 'win64' ]
 	then
-		cp $HOME/cudatext_up/src/CudaText/app/cudatext.exe $HOME/cudatext_up/bin/$OS-$CPU/cudatext.exe
+		cp ./src/CudaText/app/cudatext.exe ./bin/$OS-$CPU/cudatext.exe
 	else
-		cp $HOME/cudatext_up/src/CudaText/app/cudatext $HOME/cudatext_up/bin/$OS-$CPU/cudatext
+		cp ./src/CudaText/app/cudatext ./bin/$OS-$CPU/cudatext
 	fi
 fi
