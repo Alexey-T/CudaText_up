@@ -118,14 +118,7 @@ then
 		inc="$inc --cpu=$CPU"
 	fi
 	"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "./src/CudaText/app/cudatext.lpi"
-	if ! [ -d "./bin" ]
-	then
-		mkdir "./bin"
-	fi
-	if ! [ -d "$./bin/$OS-$CPU" ]
-	then
-		mkdir "./bin/$OS-$CPU"
-	fi
+	mkdir -pv "./bin/$OS-$CPU"
 	if [ $OS = 'win32' ] || [ $OS = 'win64' ]
 	then
 		cp ./src/CudaText/app/cudatext.exe ./bin/$OS-$CPU/cudatext.exe
