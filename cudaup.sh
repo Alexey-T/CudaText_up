@@ -20,6 +20,8 @@ Options:
   -h  --help                 show this message
 "
 
+[ $# -eq 0 ] && { echo "$usage"; exit 0; }
+
 OPTIONS=hgpml:o:c:
 LONGOPTS=help,get,packs,make,lazdir:,os:,cpu:
 ! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
