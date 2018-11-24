@@ -117,6 +117,13 @@ then
 	then
 		inc="$inc --cpu=$CPU"
 	fi
+	if [ $DoInstallLibs = 'false' ]
+	then
+		for i in $Packets
+		do
+			"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "./src/$i"
+		done
+	fi
 	"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "./src/CudaText/app/cudatext.lpi"
 	mkdir -pv "./bin/$OS-$CPU"
 	if [ $OS = 'win32' ] || [ $OS = 'win64' ]
