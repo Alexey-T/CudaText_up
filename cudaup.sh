@@ -20,8 +20,8 @@ Options:
   -h  --help                 show this message
 "
 
-OPTIONS=gpml:o:c:
-LONGOPTS=get,packs,make,lazdir:,os:,cpu:
+OPTIONS=hgpml:o:c:
+LONGOPTS=help,get,packs,make,lazdir:,os:,cpu:
 ! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
 if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
 	echo "$usage"  
