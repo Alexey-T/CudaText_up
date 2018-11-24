@@ -6,7 +6,7 @@ CPU="$HOSTTYPE"
 DoGet='false'
 DoInstallLibs='false'
 DoMake='false'
-lazdir=$(dirname "$(readlink -f "$(which lazbuild)")")
+lazdir=$(dirname "$(readlink -f "$(which lazbuild 2> /dev/null)")")
 usage="
 Usage: $(basename $0) [OPTION...]
 
