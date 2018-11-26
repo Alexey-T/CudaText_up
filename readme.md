@@ -24,5 +24,5 @@ Download + cross-compile to another platform:
 
 To cross-compile to another platform, you need to use FpcUpDeluxe and install cross-compilers in its GUI.
 
-* Author: @Artem3213212
+* Author: Artem Gavrilov (@Artem3213212)
 * License: MIT
