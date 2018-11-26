@@ -6,7 +6,7 @@ CPU="$HOSTTYPE"
 DoGet='false'
 DoInstallLibs='false'
 DoMake='false'
-lazdir=$(dirname "$(readlink -f "$(which lazbuild)")")
+lazdir=$(dirname "$(readlink -f "$(which lazbuild 2> /dev/null)")")
 usage="
 Usage: $(basename $0) [OPTION...]
 
@@ -20,8 +20,10 @@ Options:
   -h  --help                 show this message
 "
 
-OPTIONS=gpml:o:c:
-LONGOPTS=get,packs,make,lazdir:,os:,cpu:
+[ $# -eq 0 ] && { echo "$usage"; exit 0; }
+
+OPTIONS=hgpml:o:c:
+LONGOPTS=help,get,packs,make,lazdir:,os:,cpu:
 ! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
 if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
 	echo "$usage"  
@@ -116,6 +118,13 @@ then
 	if [ $CPU != "$HOSTTYPE" ]
 	then
 		inc="$inc --cpu=$CPU"
+	fi
+	if [ $DoInstallLibs = 'false' ]
+	then
+		for i in $Packets
+		do
+			"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "./src/$i"
+		done
 	fi
 	"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "./src/CudaText/app/cudatext.lpi"
 	mkdir -pv "./bin/$OS-$CPU"
