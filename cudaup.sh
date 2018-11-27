@@ -6,7 +6,10 @@ CPU="$HOSTTYPE"
 DoGet='false'
 DoInstallLibs='false'
 DoMake='false'
-lazdir=$(dirname "$(readlink -f "$(which lazbuild 2> /dev/null)")")
+lazdir=$(which lazbuild 2> /dev/null) && \
+lazdir=$(readlink -f "$lazdir") && \
+lazdir=$(dirname "$lazdir")
+
 usage="
 Usage: $(basename $0) [OPTION...]
 
@@ -68,7 +71,13 @@ while true; do
 	esac
 done
 
-if [[ ! -x $lazdir/lazbuild ]]; then
+if [ -z "$lazdir" ]; then
+	echo "Couldn't find Lazarus directory"
+	echo "Use -l <path> option"
+	exit 1
+fi
+
+if [ ! -x "$lazdir/lazbuild" ]; then
 	echo "Couldn't find lazbuild"
 	echo "Use -l <path> option"
 	exit 1
