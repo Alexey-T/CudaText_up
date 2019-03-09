@@ -21,6 +21,7 @@ Download + cross-compile to another platform:
   
 * Possible values of "system": win32, win64, linux, freebsd, darwin.
 * Possible values of "cpu" (not for win32, win64): i386, x86_64, arm.
+* Better run script via "sudo", otherwise new folders will have mode rw-r--r-- and resulting CudaText binary cannot create its config settings/user.json
 
 To cross-compile to another platform, you need to use FpcUpDeluxe and install cross-compilers in its GUI.
 
