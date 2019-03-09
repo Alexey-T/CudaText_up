@@ -88,7 +88,7 @@ Repos=$(cat cudaup.repos)
 Packets=$(cat cudaup.packets)
 if [ $DoGet = 'true' ]
 then
-	mkdir -pv 'src'
+	mkdir -m=rw-rw-rw -pv 'src'
 	cd src
 	for i in $Repos
 	do	
