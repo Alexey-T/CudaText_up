@@ -22,7 +22,7 @@ Options:
   -l  --lazdir <directiory>  set Lazarus directory
   -o  --os <system>          set target OS (win32/win64/linux/freebsd/darwin/solaris)
   -c  --cpu <arch>           set target CPU (i386/x86_64/arm)
-      --clean                delete temp files (src/*/*/lib/*-*)
+      --clean                delete temp Free Pascal folders (src/*/*/lib/*-*)
   -h  --help                 show this message
 "
 
