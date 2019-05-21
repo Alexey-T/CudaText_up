@@ -103,7 +103,7 @@ then
 fi
 if [ $DoGet = 'true' ]
 then
-	mkdir -m=rw-rw-rw -pv 'src'
+	mkdir -m=rwxrwxrw -pv 'src'
 	cd src
 	for i in $Repos
 	do	
