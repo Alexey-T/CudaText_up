@@ -6,6 +6,7 @@ CPU="$HOSTTYPE"
 DoGet='false'
 DoInstallLibs='false'
 DoMake='false'
+DoClean='false'
 lazdir=$(which lazbuild 2> /dev/null) && \
 lazdir=$(readlink -f "$lazdir") && \
 lazdir=$(dirname "$lazdir")
@@ -20,13 +21,16 @@ Options:
   -l  --lazdir <directiory>  set Lazarus directory
   -o  --os <system>          set target OS (win32/win64/linux/freebsd/darwin)
   -c  --cpu <arch>           set target CPU (i386/x86_64/arm)
+  --clean                    cleaning src/*/*/lib/*-* directories from
+                             compiled objects
+  
   -h  --help                 show this message
 "
 
 [ $# -eq 0 ] && { echo "$usage"; exit 0; }
 
 OPTIONS=hgpml:o:c:
-LONGOPTS=help,get,packs,make,lazdir:,os:,cpu:
+LONGOPTS=clean,help,get,packs,make,lazdir:,os:,cpu:
 ! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
 if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
 	echo "$usage"  
@@ -36,6 +40,10 @@ eval set -- "$PARSED"
 
 while true; do
 	case "$1" in
+	--clean)
+		DoClean=true
+		shift
+		;;
 	-g|--get)
 		DoGet=true
 		shift
@@ -86,6 +94,14 @@ fi
 cd $(dirname "$0")
 Repos=$(cat cudaup.repos)
 Packets=$(cat cudaup.packets)
+
+if [ $DoClean = 'true' ]
+then
+	if [ -d src ]
+	then
+		rm -rf src/*/*/lib/*-*
+	fi
+fi
 if [ $DoGet = 'true' ]
 then
 	mkdir -m=rw-rw-rw -pv 'src'
