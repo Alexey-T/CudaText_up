@@ -15,15 +15,13 @@ usage="
 Usage: $(basename $0) [OPTION...]
 
 Options:
-  -g  --get                  download sources
+  -g  --get                  download packages
   -p  --packs                install packages to Lazarus
   -m  --make                 compile CudaText
   -l  --lazdir <directiory>  set Lazarus directory
-  -o  --os <system>          set target OS (win32/win64/linux/freebsd/darwin)
+  -o  --os <system>          set target OS (win32/win64/linux/freebsd/darwin/solaris)
   -c  --cpu <arch>           set target CPU (i386/x86_64/arm)
-  --clean                    cleaning src/*/*/lib/*-* directories from
-                             compiled objects
-  
+      --clean                delete temp files (src/*/*/lib/*-*)
   -h  --help                 show this message
 "
 
