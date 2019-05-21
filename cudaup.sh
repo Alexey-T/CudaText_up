@@ -13,7 +13,6 @@ lazdir=$(dirname "$lazdir")
 
 usage="
 Usage: $(basename $0) [option...]
-Run with 'sudo' so new folder 'src' will have write permissions.
 
 Options:
   -g  --get                  download packages
