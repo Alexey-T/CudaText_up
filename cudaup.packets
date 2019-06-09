@@ -5,4 +5,5 @@ ATSynEdit_Cmp/atsynedit_cmp/atsynedit_cmp_package.lpk
 EControl_v1/econtrol/econtrol_package.lpk
 ATSynEdit_Ex_v1/atsynedit_ex/atsynedit_ex_package.lpk
 Python-for-Lazarus/python4lazarus/python4lazarus_package.lpk
+Emmet-Pascal/emmet/emmet_package.lpk
 UniqueInstance/uniqueinstance/uniqueinstance_package.lpk
