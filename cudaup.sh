@@ -3,6 +3,7 @@
 #set -e
 OS="linux"
 CPU="$HOSTTYPE"
+WS=""
 DoGet='false'
 DoInstallLibs='false'
 DoMake='false'
@@ -21,14 +22,15 @@ Options:
   -l  --lazdir <directiory>  set Lazarus directory
   -o  --os <system>          set target OS (win32/win64/linux/freebsd/darwin/solaris)
   -c  --cpu <arch>           set target CPU (i386/x86_64/arm)
+  -w  --ws <widgetset>       override WidgetSet (gtk2/gtk3/qt/qt5/cocoa)
       --clean                delete temp Free Pascal folders (src/*/*/lib/*-*)
   -h  --help                 show this message
 "
 
 [ $# -eq 0 ] && { echo "$usage"; exit 0; }
 
-OPTIONS=hgpml:o:c:
-LONGOPTS=clean,help,get,packs,make,lazdir:,os:,cpu:
+OPTIONS=hgpml:o:c:w:
+LONGOPTS=clean,help,get,packs,make,lazdir:,os:,cpu:,ws:
 ! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
 if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
 	echo "$usage"  
@@ -64,6 +66,10 @@ while true; do
 		;;
 	-o|--os)
 		OS=$2
+		shift 2
+		;;
+	-w|--ws)
+		WS=$2
 		shift 2
 		;;
 	-p|--packs)
@@ -142,6 +148,10 @@ then
 	then
 		inc="$inc --cpu=$CPU"
 	fi
+	if [ $WS != "" ]
+	then
+		inc="$inc --ws=$WS"
+	fi
 	if [ $DoInstallLibs = 'false' ]
 	then
 		for i in $Packets
@@ -149,12 +159,14 @@ then
 			"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "./src/$i"
 		done
 	fi
+	rm "./src/CudaText/app/cudatext"
 	"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "./src/CudaText/app/cudatext.lpi"
-	mkdir -pv "./bin/$OS-$CPU"
+	OUTDIR="./bin/$OS-$CPU-$WS"
+	mkdir -pv $OUTDIR
 	if [ $OS = 'win32' ] || [ $OS = 'win64' ]
 	then
-		cp ./src/CudaText/app/cudatext.exe ./bin/$OS-$CPU/cudatext.exe
+		cp ./src/CudaText/app/cudatext.exe $OUTDIR/cudatext.exe
 	else
-		cp ./src/CudaText/app/cudatext ./bin/$OS-$CPU/cudatext
+		cp ./src/CudaText/app/cudatext $OUTDIR/cudatext
 	fi
 fi
