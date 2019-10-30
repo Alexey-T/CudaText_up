@@ -1,4 +1,5 @@
 ATBinHex-Lazarus/atbinhex/atbinhex_package.lpk
+ATCanvasPrimitives/atcanvasprimitives/atcanvasprimitives_package.lpk
 ATFlatControls/atflatcontrols/atflatcontrols_package.lpk
 EncConv/encconv/encconv_package.lpk
 ATSynEdit/atsynedit/atsynedit_package.lpk
