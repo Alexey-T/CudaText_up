@@ -19,8 +19,8 @@ Download + cross-compile to another platform:
 ./cudaup.sh -g -m -l /path/to/lazarus -o system -c cpu
 ```
   
-* Possible values of "system": win32, win64, linux, darwin, freebsd, solaris.
-* Possible values of "cpu" (not for win32, win64): i386, x86_64, arm, sparc.
+* Possible values of "system": win32, win64, linux, darwin, freebsd, openbsd, netbsd, dragonfly, solaris, haiku.
+* Possible values of "cpu" (not for win32, win64): i386, x86_64, arm, aarch64, sparc.
 * Better run script via "sudo", otherwise new folders will have mode rw-r--r-- and resulting CudaText binary cannot create its config settings/user.json
 
 To cross-compile to another platform, you need to use FpcUpDeluxe and install cross-compilers in its GUI.
