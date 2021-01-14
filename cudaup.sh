@@ -115,6 +115,7 @@ then
 	for i in $Repos
 	do	
 		temp=${i/'https://github.com/Alexey-T/'/''}
+		temp=${temp/'https://github.com/bgrabitmap/'/''}
 		[ ! -d "$temp/.git" ] && git clone "$i"	
 		cd "$temp"
 		git pull origin master
