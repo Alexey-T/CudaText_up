@@ -1,6 +1,7 @@
 Bash script to download all CudaText sources and build them.
 Working dir is ~/cudatext_up.
 Build results are in subdir /bin.
+You need to clone the whole repository to use the script.
 
 Download + build for current platform:
 ```shell
