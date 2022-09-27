@@ -116,7 +116,7 @@ then
 	do	
 		temp=${i/'https://github.com/Alexey-T/'/''}
 		temp=${temp/'https://github.com/bgrabitmap/'/''}
-		[ ! -d "$temp/.git" ] && git clone "$i"	
+		[ ! -d "$temp/.git" ] && git clone --depth 1 "$i"	
 		cd "$temp"
 		git pull origin master
 		cd ../
