@@ -120,10 +120,14 @@ then
 			git clone --depth 1 "$i"	
 		else
 			cd "$temp"
+			last_commit="$(git log -n 1 --pretty=format:'%H')"
 			git pull --depth 1 --rebase origin master
-			git tag -d $(git tag -l)
-			git reflog expire --expire=all --all
-			git gc --prune=all
+			if [ "$last_commit" != "$(git log -n 1 --pretty=format:'%H')" ]; then
+				# There are new commits, so make size smaller like a new shallow clone
+				git tag -d $(git tag -l)
+				git reflog expire --expire=all --all
+				git gc --prune=all
+			fi
 			cd ../
 		fi
 	done
