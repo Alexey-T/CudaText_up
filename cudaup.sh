@@ -116,13 +116,16 @@ then
 	do	
 		temp=${i/'https://github.com/Alexey-T/'/''}
 		temp=${temp/'https://github.com/bgrabitmap/'/''}
-		[ ! -d "$temp/.git" ] && git clone --depth 1 "$i"	
-		cd "$temp"
-		git pull --depth 1 --rebase origin master
-		git tag -d $(git tag -l)
-		git reflog expire --expire=all --all
-		git gc --prune=all
-		cd ../
+		if [ ! -d "$temp/.git" ]; then
+			git clone --depth 1 "$i"	
+		else
+			cd "$temp"
+			git pull --depth 1 --rebase origin master
+			git tag -d $(git tag -l)
+			git reflog expire --expire=all --all
+			git gc --prune=all
+			cd ../
+		fi
 	done
 	cd ../
 fi
