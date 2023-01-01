@@ -135,23 +135,23 @@ fi
 if [ $DoMake = 'true' ]
 then
 	inc=''
-	if [ $OS != 'linux' ]
+	if [ '$OS' != 'linux' ]
 	then
 		inc="$inc --os=$OS"
 	fi
-	if [ $OS = 'win32' ]
+	if [ '$OS' = 'win32' ]
 	then
 		CPU='i386'
 	fi
-	if [ $OS = 'win64' ]
+	if [ '$OS' = 'win64' ]
 	then
 		CPU='x86_64'
 	fi
-	if [ $CPU != "$HOSTTYPE" ]
+	if [ "$CPU" != "$HOSTTYPE" ]
 	then
 		inc="$inc --cpu=$CPU"
 	fi
-	if [ $WS != "" ]
+	if [ "$WS" != "" ]
 	then
 		inc="$inc --ws=$WS"
 	fi
@@ -166,7 +166,7 @@ then
 	"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "./src/CudaText/app/cudatext.lpi"
 	OUTDIR="./bin/$OS-$CPU-$WS"
 	mkdir -pv $OUTDIR
-	if [ $OS = 'win32' ] || [ $OS = 'win64' ]
+	if [ '$OS' = 'win32' ] || [ '$OS' = 'win64' ]
 	then
 		cp ./src/CudaText/app/cudatext.exe $OUTDIR/cudatext.exe
 	else
