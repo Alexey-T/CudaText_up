@@ -118,7 +118,7 @@ then
 		temp=${temp/'https://github.com/bgrabitmap/'/''}
 		[ ! -d "$temp/.git" ] && git clone --depth 1 "$i"	
 		cd "$temp"
-		git pull origin master
+		git pull
 		cd ../
 	done
 	cd ../
