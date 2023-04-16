@@ -118,7 +118,7 @@ then
 		temp=${i/'https://github.com/Alexey-T/'/''}
 		temp=${temp/'https://github.com/bgrabitmap/'/''}
 		if [ ! -d "$temp/.git" ]; then
-			echo Clonning "$i"
+			echo Cloning "$i"
 			git clone --depth 1 "$i"	
 		else
 			cd "$temp"
