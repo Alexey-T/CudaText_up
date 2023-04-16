@@ -114,12 +114,27 @@ then
 	cd src
 	for i in $Repos
 	do	
+		i=${i%%[[:space:]]} # removes line breaks from the right end of the var!
 		temp=${i/'https://github.com/Alexey-T/'/''}
 		temp=${temp/'https://github.com/bgrabitmap/'/''}
-		[ ! -d "$temp/.git" ] && git clone --depth 1 "$i"	
-		cd "$temp"
-		git pull
-		cd ../
+		if [ ! -d "$temp/.git" ]; then
+			echo Clonning "$i"
+			git clone --depth 1 "$i"	
+		else
+			cd "$temp"
+			echo Pulling "$i"
+			last_commit="$(git log -n 1 --pretty=format:'%H')"
+			git stash > /dev/null
+			git pull --depth 1 --rebase
+			git stash pop > /dev/null 2>&1
+			if [ "$last_commit" != "$(git log -n 1 --pretty=format:'%H')" ]; then
+				# There are new commits, so make size smaller like a new shallow clone
+				git tag -d $(git tag -l)
+				git reflog expire --expire=all --all
+				git gc --prune=all
+			fi
+			cd ../
+		fi
 	done
 	cd ../
 fi
