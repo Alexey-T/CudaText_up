@@ -134,13 +134,13 @@ then
 			originmaster=$(git rev-parse --abbrev-ref HEAD@{upstream}) # origin/master
 			origin_master=$(echo $originmaster | sed 's#/# #')         # origin master
 			
-			git fetch $origin_master --quiet
+			git fetch $origin_master --quiet --no-tags
 			last_commit_current_branch=$(git rev-parse HEAD)
 			last_commit_origin_master=$(git rev-parse $originmaster)
 			
 			if [ "$last_commit_current_branch" != "$last_commit_origin_master" ]; then
 				git merge $originmaster                     # this will show changed files
-				git fetch --depth 1 $origin_master --quiet  # now do shallow fetch
+				git fetch --depth 1 $origin_master --quiet --no-tags  # now do shallow fetch
 				git reset --hard $originmaster --quiet      # and switch to it
 				git tag -d $(git tag -l) > /dev/null
 				git reflog expire --expire=all --all
