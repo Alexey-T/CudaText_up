@@ -123,15 +123,33 @@ then
 		else
 			cd "$temp"
 			echo Pulling "$i"
-			last_commit="$(git log -n 1 --pretty=format:'%H')"
-			git stash > /dev/null
-			git pull --depth 1 --rebase --no-tags
-			git stash pop > /dev/null 2>&1
-			if [ "$last_commit" != "$(git log -n 1 --pretty=format:'%H')" ]; then
-				# There are new commits, so make size smaller like a new shallow clone
-				git tag -d $(git tag -l)
+			stashed=false
+			stash_list_before=$(git stash list)
+			git stash push --quiet
+			stash_list_after=$(git stash list)
+			if [ "$stash_list_before" != "$stash_list_after" ]; then
+				stashed=true
+			fi
+			
+			originmaster=$(git rev-parse --abbrev-ref HEAD@{upstream}) # origin/master
+			origin_master=$(echo $originmaster | sed 's#/# #')         # origin master
+			
+			git fetch $origin_master --quiet --no-tags
+			last_commit_current_branch=$(git rev-parse HEAD)
+			last_commit_origin_master=$(git rev-parse $originmaster)
+			
+			if [ "$last_commit_current_branch" != "$last_commit_origin_master" ]; then
+				git merge $originmaster                     # this will show changed files
+				git fetch --depth 1 $origin_master --quiet --no-tags  # now do shallow fetch
+				git reset --hard $originmaster --quiet      # and switch to it
+				git tag -d $(git tag -l) > /dev/null
 				git reflog expire --expire=all --all
 				git gc --prune=all
+			fi
+			
+			if [ "$stashed" = true ]; then
+				echo Restoring stash
+				git stash pop --quiet
 			fi
 			cd ../
 		fi
