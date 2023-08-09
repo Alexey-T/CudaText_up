@@ -119,14 +119,7 @@ then
 		temp=${temp/'https://github.com/bgrabitmap/'/''}
 		if [ ! -d "$temp/.git" ]; then
 			echo Cloning "$i"
-			#git clone --depth 1 "$i"
-			git clone "$i"
-			# we need custom branch of 'bgrabitmap'
-			if [ "$temp" = "bgrabitmap" ]; then
-				cd $temp
-				git checkout dev-bgrabitmap
-				cd ..
-			fi
+			git clone --depth 1 "$i"	
 		else
 			cd "$temp"
 			echo Pulling "$i"
