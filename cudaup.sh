@@ -197,7 +197,8 @@ then
 	rm -f "./src/CudaText/app/cudatext"
 	mkdir -p ./src/CudaText/app/cudatext.app/Contents/MacOS
 	"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "./src/CudaText/app/cudatext.lpi"
-	OUTDIR="./bin/$OS-$CPU-$WS"
+	OUTDIR="./bin/$OS-$CPU"
+	[ "$WS" ] && OUTDIR="$OUTDIR-$WS"
 	mkdir -pv $OUTDIR
 	if [ "$OS" = 'win32' ] || [ "$OS" = 'win64' ]
 	then
