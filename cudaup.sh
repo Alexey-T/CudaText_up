@@ -12,6 +12,11 @@ lazdir=$(which lazbuild 2> /dev/null) && \
 lazdir=$(readlink -f "$lazdir") && \
 lazdir=$(dirname "$lazdir")
 
+[ -z "$lazdir" -a -x "$HOME/Applications/Lazarus/lazbuild" ] && \
+  lazdir="$HOME/Applications/Lazarus"
+[ -z "$lazdir" -a -x "/Applications/Lazarus/lazbuild" ] && \
+  lazdir=/Applications/Lazarus
+
 usage="
 Usage: $(basename $0) [option...]
 
@@ -29,16 +34,7 @@ Options:
 
 [ $# -eq 0 ] && { echo "$usage"; exit 0; }
 
-OPTIONS=hgpml:o:c:w:
-LONGOPTS=clean,help,get,packs,make,lazdir:,os:,cpu:,ws:
-! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
-if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
-	echo "$usage"  
-	exit 2
-fi
-eval set -- "$PARSED"
-
-while true; do
+while [ $# -gt 0 ]; do
 	case "$1" in
 	--clean)
 		DoClean=true
@@ -80,6 +76,9 @@ while true; do
 		shift
 		break
 		;;
+	*)
+		echo "$usage"
+		exit 1
 	esac
 done
 
@@ -110,7 +109,7 @@ then
 fi
 if [ $DoGet = 'true' ]
 then
-	mkdir -m=rwxrwxrw -pv 'src'
+	mkdir -pv 'src'
 	cd src
 	for i in $Repos
 	do	
@@ -168,15 +167,15 @@ fi
 if [ $DoMake = 'true' ]
 then
 	inc=''
-	if [ '$OS' != 'linux' ]
+	if [ "$OS" != 'linux' ]
 	then
 		inc="$inc --os=$OS"
 	fi
-	if [ '$OS' = 'win32' ]
+	if [ "$OS" = 'win32' ]
 	then
 		CPU='i386'
 	fi
-	if [ '$OS' = 'win64' ]
+	if [ "$OS" = 'win64' ]
 	then
 		CPU='x86_64'
 	fi
@@ -195,11 +194,12 @@ then
 			"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "./src/$i"
 		done
 	fi
-	rm "./src/CudaText/app/cudatext"
+	rm -f "./src/CudaText/app/cudatext"
+	mkdir -p ./src/CudaText/app/cudatext.app/Contents/MacOS
 	"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "./src/CudaText/app/cudatext.lpi"
 	OUTDIR="./bin/$OS-$CPU-$WS"
 	mkdir -pv $OUTDIR
-	if [ '$OS' = 'win32' ] || [ '$OS' = 'win64' ]
+	if [ "$OS" = 'win32' ] || [ "$OS" = 'win64' ]
 	then
 		cp ./src/CudaText/app/cudatext.exe $OUTDIR/cudatext.exe
 	else
