@@ -26,7 +26,7 @@ Options:
   -m  --make                 compile CudaText
   -l  --lazdir <directiory>  set Lazarus directory
   -o  --os <system>          set target OS (win32/win64/linux/freebsd/darwin/solaris)
-  -c  --cpu <arch>           set target CPU (i386/x86_64/arm)
+  -c  --cpu <arch>           set target CPU (i386/x86_64/arm/aarch64/riscv64)
   -w  --ws <widgetset>       override WidgetSet (gtk2/gtk3/qt/qt5/cocoa)
       --clean                delete temp Free Pascal folders (src/*/*/lib/*-*)
   -h  --help                 show this message
