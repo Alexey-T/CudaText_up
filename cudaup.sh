@@ -57,7 +57,7 @@ while [ $# -gt 0 ]; do
 		shift 2
 		;;
 	-c|--cpu)
-		CPU=$@
+		CPU=$2
 		shift 2
 		;;
 	-o|--os)
@@ -196,6 +196,7 @@ then
 	fi
 	rm -f "./src/CudaText/app/cudatext"
 	mkdir -p ./src/CudaText/app/cudatext.app/Contents/MacOS
+	echo "Running: $lazdir/lazbuild $inc -q --lazarusdir=$lazdir ./src/CudaText/app/cudatext.lpi"
 	"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "./src/CudaText/app/cudatext.lpi"
 	OUTDIR="./bin/$OS-$CPU"
 	[ "$WS" ] && OUTDIR="$OUTDIR-$WS"
