@@ -21,7 +21,7 @@ Download + cross-compile to another platform:
 ```
   
 * Possible values of "system": win32, win64, linux, darwin, freebsd, openbsd, netbsd, dragonfly, solaris, haiku.
-* Possible values of "cpu" (not for win32, win64): i386, x86_64, arm, aarch64, sparc.
+* Possible values of "cpu": i386, x86_64, arm, aarch64, sparc.
 
 To cross-compile to another platform, you need to use FpcUpDeluxe and install cross-compilers in its GUI.
 
