@@ -171,14 +171,6 @@ then
 	then
 		inc="$inc --os=$OS"
 	fi
-	if [ "$OS" = 'win32' ]
-	then
-		CPU='i386'
-	fi
-	if [ "$OS" = 'win64' ]
-	then
-		CPU='x86_64'
-	fi
 	if [ "$CPU" != "$HOSTTYPE" ]
 	then
 		inc="$inc --cpu=$CPU"
