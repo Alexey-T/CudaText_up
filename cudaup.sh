@@ -28,6 +28,7 @@ Options:
   -o  --os <system>          set target OS (win32/win64/linux/freebsd/darwin/solaris)
   -c  --cpu <arch>           set target CPU (i386/x86_64/arm/aarch64/riscv64)
   -w  --ws <widgetset>       override WidgetSet (win32/gtk2/gtk3/qt5/qt6/cocoa)
+                             (default: win32 when --os is win32/win64)
       --clean                delete temp Free Pascal folders (src/*/*/lib/*-*)
   -h  --help                 show this message
 "
@@ -164,9 +165,17 @@ if [ "$CPU" != "$HOSTTYPE" ]
 then
 	inc="$inc --cpu=$CPU"
 fi
-if [ "$WS" != "" ]
+WSBuild="$WS"
+if [ "$WSBuild" = '' ]
 then
-	inc="$inc --ws=$WS"
+	if [ "$OS" = 'win32' ] || [ "$OS" = 'win64' ]
+	then
+		WSBuild='win32'
+	fi
+fi
+if [ "$WSBuild" != "" ]
+then
+	inc="$inc --ws=$WSBuild"
 fi
 if [ $DoInstallLibs = 'true' ]
 then
