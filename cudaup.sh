@@ -155,30 +155,30 @@ then
 	done
 	cd ../
 fi
+inc=''
+if [ "$OS" != 'linux' ]
+then
+	inc="$inc --os=$OS"
+fi
+if [ "$CPU" != "$HOSTTYPE" ]
+then
+	inc="$inc --cpu=$CPU"
+fi
+if [ "$WS" != "" ]
+then
+	inc="$inc --ws=$WS"
+fi
 if [ $DoInstallLibs = 'true' ]
 then
 	for i in $Packets
 	do
-		"$lazdir/lazbuild" -q --lazarusdir="$lazdir" "./src/$i"
-		"$lazdir/lazbuild" -q --lazarusdir="$lazdir" --add-package "./src/$i"
+		"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" "./src/$i"
+		"$lazdir/lazbuild" $inc -q --lazarusdir="$lazdir" --add-package "./src/$i"
 	done
-	"$lazdir/lazbuild" -q --build-ide=
+	"$lazdir/lazbuild" $inc -q --build-ide=
 fi
 if [ $DoMake = 'true' ]
 then
-	inc=''
-	if [ "$OS" != 'linux' ]
-	then
-		inc="$inc --os=$OS"
-	fi
-	if [ "$CPU" != "$HOSTTYPE" ]
-	then
-		inc="$inc --cpu=$CPU"
-	fi
-	if [ "$WS" != "" ]
-	then
-		inc="$inc --ws=$WS"
-	fi
 	if [ $DoInstallLibs = 'false' ]
 	then
 		for i in $Packets
